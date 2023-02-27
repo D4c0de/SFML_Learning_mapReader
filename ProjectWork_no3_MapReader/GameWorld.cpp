@@ -5,7 +5,7 @@ GameWorld::GameWorld(int _viewDistance)
 {
     viewDistance = _viewDistance;
 
-    window = new sf::RenderWindow(sf::VideoMode(50 * viewDistance, 50 * viewDistance), "game");
+    window = new sf::RenderWindow(sf::VideoMode(50 * (viewDistance*2+1), 50 * (viewDistance*2 + 1)), "game");
 
     readFromMap();
 }
@@ -36,8 +36,9 @@ void GameWorld::readFromMap() {
             }
             else if(id==255)
             {
-                tiles.push_back(new GameTile(x, y, 1));
-                center = tiles[tiles.size() - 1];
+                tiles.push_back(new GameTile(x, y, 100));
+                center.x = x;
+                center.y = y;
             }
             else
             {
@@ -45,6 +46,31 @@ void GameWorld::readFromMap() {
             }
         }
     }
+}
+
+void GameWorld::drawInRenege()
+{
+    window->clear();
+    for (int i = 0; i < tiles.size(); i++)
+    {
+
+        int minX = center.x - viewDistance;
+        int maxX = center.x + viewDistance;
+        int minY = center.y - viewDistance;
+        int maxY = center.y + viewDistance;
+        int X = tiles[i]->pos.x;
+        int Y = tiles[i]->pos.y;
+        if ( X>=minX  &&  X<=maxX)
+        {
+            if (Y >= minY && Y <= maxY)
+            {
+                tiles[i]->setSpritePos(minX, minY);
+                window->draw(tiles[i]->sprite);
+            }
+        }
+    }
+    window->display();
+
 }
 
 GameWorld::~GameWorld()

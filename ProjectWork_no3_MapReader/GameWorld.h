@@ -9,8 +9,9 @@ public:
 	int viewDistance;
 	sf::RenderWindow* window;
 	std::vector<GameTile*> tiles;
-	GameTile* center;
+	sf::Vector2i center;
 	void readFromMap();
+	void drawInRenege();
 
 
 private:

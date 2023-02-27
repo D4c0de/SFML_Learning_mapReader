@@ -13,23 +13,28 @@ GameTile::GameTile(int x, int y, int _id)
 	setUpSprite();
 }
 
+void GameTile::setSpritePos(int x,int y)
+{
+	
+	sprite.setPosition((pos.x-x) * 50, (pos.y-y) * 50);
+}
+
 void GameTile::setUpSprite()
 {
 	
-	sf::Texture texture;
+	
 	std::string string;
 	switch (id)
 	{
-	case(100):
-		string = "grass";
+	case(101):
+		string = "grass.png";
 		break;
 	default:
-		string = "error";
+		string = "error.png";
 		break;
 	}
-	texture.loadFromFile(string+".png");
+	texture.loadFromFile(string);
 	sprite.setTexture(texture);
-	sprite.setPosition(pos.x, pos.y);
 }
 
 GameTile::~GameTile()

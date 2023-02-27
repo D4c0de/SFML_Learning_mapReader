@@ -1,25 +1,31 @@
 #include <fstream>
 #include <iostream>
 #include "GameWorld.h"
+#include <Windows.h>
 
 #define _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS_GLOBALS
 
 int main() {
 	
-    GameWorld world(2);
-	sf::Window* window = world.window;
-	while (window->isOpen())
+	const int windowHeight = 800;
+	const int windowWidth = 800;
+	const int textureSize=50;
+	sf::RenderWindow window(sf::VideoMode(windowHeight, windowWidth), "game");
+    GameWorld world(8,textureSize,&window);
+	while (window.isOpen())
 	{
 		sf::Event event;
-		while (window->pollEvent(event))
+		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
 			{
-				window->close();
+				window.close();
 			}
 		}
+		world.checkPressedKey();
 		world.drawInRenege();
+		Sleep(200);
 
 	}
 }

@@ -4,7 +4,6 @@
 class GameTile
 {
 public:
-	GameTile();
 	GameTile(int, int, int);
 	~GameTile();
 	sf::Vector2i pos;
@@ -12,6 +11,9 @@ public:
 	sf::Texture texture;
 	int id;
 	void setSpritePos(int,int);
+	sf::Sprite getSprite();
+	sf::Sprite getSprite(float);
+
 private:
 	void setUpSprite();
 };

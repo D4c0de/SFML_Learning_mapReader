@@ -1,10 +1,5 @@
 #include "GameTile.h"
 
-GameTile::GameTile()
-{
-
-}
-
 GameTile::GameTile(int x, int y, int _id)
 {
 	pos.x = x;
@@ -19,6 +14,22 @@ void GameTile::setSpritePos(int x,int y)
 	sprite.setPosition((pos.x-x) * 50, (pos.y-y) * 50);
 }
 
+sf::Sprite GameTile::getSprite()
+{
+
+	return this->sprite;
+}
+
+sf::Sprite GameTile::getSprite(float scale)
+{
+	sf::Sprite sprite = this->sprite;
+	sf::Vector2f pos = sprite.getPosition();
+	pos *= scale;
+	sprite.setPosition(pos);
+	sprite.setScale(scale, scale);
+	return sprite;
+}
+
 void GameTile::setUpSprite()
 {
 	
@@ -26,7 +37,7 @@ void GameTile::setUpSprite()
 	std::string string;
 	switch (id)
 	{
-	case(101):
+	case(100):
 		string = "grass.png";
 		break;
 	default:

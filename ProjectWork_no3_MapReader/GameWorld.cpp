@@ -1,13 +1,13 @@
 #include "GameWorld.h"
 #include "bitmap_image.hpp"
 
-GameWorld::GameWorld(int _viewDistance)
+GameWorld::GameWorld(int _viewDistance,const int _textureSize,sf::RenderWindow* _window)
 {
+    window = _window;
+    textureSize = _textureSize;
     viewDistance = _viewDistance;
-
-    window = new sf::RenderWindow(sf::VideoMode(50 * (viewDistance*2+1), 50 * (viewDistance*2 + 1)), "game");
-
     readFromMap();
+    scale =setScale();
 }
 
 
@@ -50,22 +50,23 @@ void GameWorld::readFromMap() {
 
 void GameWorld::drawInRenege()
 {
+    scale = setScale();
     window->clear();
     for (int i = 0; i < tiles.size(); i++)
     {
 
-        int minX = center.x - viewDistance;
-        int maxX = center.x + viewDistance;
-        int minY = center.y - viewDistance;
-        int maxY = center.y + viewDistance;
+        int minX = center.x - (viewDistance/2);
+        int maxX = center.x + (viewDistance/2);
+        int minY = center.y - (viewDistance/2);
+        int maxY = center.y + (viewDistance/2);
         int X = tiles[i]->pos.x;
         int Y = tiles[i]->pos.y;
-        if ( X>=minX  &&  X<=maxX)
+        if (X >= minX && X <= maxX )
         {
             if (Y >= minY && Y <= maxY)
             {
                 tiles[i]->setSpritePos(minX, minY);
-                window->draw(tiles[i]->sprite);
+                window->draw(tiles[i]->getSprite(scale));
             }
         }
     }
@@ -73,9 +74,52 @@ void GameWorld::drawInRenege()
 
 }
 
+float GameWorld::setScale()
+{
+
+    sf::Vector2u windowSize = window->getSize();
+    float textureSize = windowSize.x /viewDistance ;
+    scale = textureSize / this->textureSize;
+    return scale;
+}
+
+void GameWorld::checkPressedKey()
+{
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    {
+        center.x++;
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    {
+        center.x--;
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    {
+        center.y++;
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    {
+        center.y--;
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
+    {
+        if (viewDistance < 15)
+        {
+            viewDistance+=2;
+        }
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
+    {
+        
+        if (viewDistance > 5)
+        {
+            viewDistance-=2;
+        }
+    }
+}
+
 GameWorld::~GameWorld()
 {
-    delete window;
     for (int i = 0; i < tiles.size(); i++)
     {
         delete tiles[i];

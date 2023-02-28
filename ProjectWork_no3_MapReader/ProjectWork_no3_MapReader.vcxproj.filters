@@ -46,5 +46,11 @@
     <Image Include="map.bmp">
       <Filter>Pliki zasobów</Filter>
     </Image>
+    <Image Include="center.png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="water.png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
   </ItemGroup>
 </Project>

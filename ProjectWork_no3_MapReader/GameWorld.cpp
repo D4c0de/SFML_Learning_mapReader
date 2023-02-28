@@ -6,11 +6,11 @@ GameWorld::GameWorld(int _viewDistance,const int _textureSize,sf::RenderWindow* 
     window = _window;
     textureSize = _textureSize;
     viewDistance = _viewDistance;
+    drawAbleSprite();
     readFromMap();
-    scale =setScale();
+    scale = setScale();
+
 }
-
-
 
 void GameWorld::readFromMap() {
     
@@ -36,13 +36,12 @@ void GameWorld::readFromMap() {
             }
             else if(id==255)
             {
-                tiles.push_back(new GameTile(x, y, 100));
-                center.x = x;
-                center.y = y;
+                tiles.push_back(new GameTile(x, y, 100, textures[1]));
+                center = new Center(x, y);
             }
             else
             {
-                tiles.push_back(new GameTile(x, y, id));
+                tiles.push_back(new GameTile(x, y, id,textures[1]));
             }
         }
     }
@@ -50,15 +49,16 @@ void GameWorld::readFromMap() {
 
 void GameWorld::drawInRenege()
 {
+    
     scale = setScale();
     window->clear();
     for (int i = 0; i < tiles.size(); i++)
     {
 
-        int minX = center.x - (viewDistance/2);
-        int maxX = center.x + (viewDistance/2);
-        int minY = center.y - (viewDistance/2);
-        int maxY = center.y + (viewDistance/2);
+        int minX = center->pos.x - (viewDistance/2);
+        int maxX = center->pos.x + (viewDistance/2);
+        int minY = center->pos.y - (viewDistance/2);
+        int maxY = center->pos.y + (viewDistance/2);
         int X = tiles[i]->pos.x;
         int Y = tiles[i]->pos.y;
         if (X >= minX && X <= maxX )
@@ -67,6 +67,31 @@ void GameWorld::drawInRenege()
             {
                 tiles[i]->setSpritePos(minX, minY);
                 window->draw(tiles[i]->getSprite(scale));
+                center->setSpritePos(minX, minY);
+                window->draw(center->getSprite(scale));
+            }
+        }
+    }
+    if (isToolBarChosed)
+    {
+        sf::RectangleShape square(sf::Vector2f(50, 150));
+        square.setPosition(50, 150);
+        square.setSize(sf::Vector2f(650, 400));
+        square.setFillColor(sf::Color(0,0,0));
+        window->draw(square);
+        int a=1;
+        int b=1;
+        for (int i = 1; i < textures.size(); i++)
+        {
+            sf::Sprite sprite;
+            sprite.setTexture(textures[i]);
+            sprite.setPosition(a*60,100+(b*60));
+            window->draw(sprite);
+            a++;
+            if (a>12)
+            {
+                a = 1;
+                b++;
             }
         }
     }
@@ -85,37 +110,85 @@ float GameWorld::setScale()
 
 void GameWorld::checkPressedKey()
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    int i = 0;
+    while (i<1000)
     {
-        center.x++;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-    {
-        center.x--;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-    {
-        center.y++;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-    {
-        center.y--;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
-    {
-        if (viewDistance < 15)
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
-            viewDistance+=2;
+            center->pos.x++;
+            break;
         }
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
-    {
-        
-        if (viewDistance > 5)
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
-            viewDistance-=2;
+            center->pos.x--;
+            break;
         }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        {
+            center->pos.y++;
+            break;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        {
+            center->pos.y--;
+            break;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
+        {
+            if (viewDistance < 15)
+            {
+                viewDistance += 2;
+            }
+            break;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
+        {
+
+            if (viewDistance > 5)
+            {
+                viewDistance -= 2;
+                break;
+            }
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tab))
+        {
+            isToolBarChosed = !isToolBarChosed;
+            break;
+        }
+        else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if (isToolBarChosed)
+            {
+                sf::Vector2i mousePos(sf::Mouse::getPosition(*window));
+                int x= (mousePos.x)/60;
+                int y= (mousePos.y-100)/60;
+                int id = x + (y-1) * 12;
+                if (id > 0 && id < textures.size())
+                {
+                    curentPlacing = &textures[id];
+                }
+                break;
+            }
+            else
+            {
+
+            }
+        }
+        i++;
     }
+}
+
+void GameWorld::drawAbleSprite()
+{
+
+    dr("error.png");
+    dr("grass.png");
+    dr("water.png");
+}
+void GameWorld::dr(const std::string& pngname) {
+    sf::Texture texture;
+    texture.loadFromFile(pngname);
+    textures.push_back(texture);
 }
 
 GameWorld::~GameWorld()
@@ -124,4 +197,5 @@ GameWorld::~GameWorld()
     {
         delete tiles[i];
     }
+    delete center;
 }

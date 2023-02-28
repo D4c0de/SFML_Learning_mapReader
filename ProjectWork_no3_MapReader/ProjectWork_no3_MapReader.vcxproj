@@ -145,6 +145,8 @@
   <ItemGroup>
     <Image Include="error.png" />
     <Image Include="grass.png" />
+    <Image Include="center.png" />
+    <Image Include="water.png" />
     <Image Include="map.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

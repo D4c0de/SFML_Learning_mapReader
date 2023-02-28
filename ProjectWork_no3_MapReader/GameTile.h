@@ -4,7 +4,9 @@
 class GameTile
 {
 public:
+	GameTile();
 	GameTile(int, int, int);
+	GameTile(int, int, int, const sf::Texture&);
 	~GameTile();
 	sf::Vector2i pos;
 	sf::Sprite sprite;
@@ -15,6 +17,17 @@ public:
 	sf::Sprite getSprite(float);
 
 private:
+	void setUpSprite(bool);
 	void setUpSprite();
 };
 
+
+class Center: public GameTile
+{
+public:
+	Center(int, int);
+	~Center();
+
+private:
+
+};

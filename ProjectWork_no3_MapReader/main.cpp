@@ -11,8 +11,9 @@ int main() {
 	const int windowHeight = 800;
 	const int windowWidth = 800;
 	const int textureSize=50;
-	sf::RenderWindow window(sf::VideoMode(windowHeight, windowWidth), "game");
-    GameWorld world(8,textureSize,&window);
+	sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "game");
+    GameWorld world(9,textureSize,&window);
+	world.drawInRenege();
 	while (window.isOpen())
 	{
 		sf::Event event;

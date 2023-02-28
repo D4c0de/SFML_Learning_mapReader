@@ -1,11 +1,24 @@
 #include "GameTile.h"
 
+GameTile::GameTile()
+{
+
+}
+
 GameTile::GameTile(int x, int y, int _id)
 {
 	pos.x = x;
 	pos.y = y;
 	id = _id;
 	setUpSprite();
+}
+GameTile::GameTile(int x, int y, int _id,const sf::Texture& _texture)
+{
+	pos.x = x;
+	pos.y = y;
+	id = _id;
+	texture = _texture;
+	setUpSprite(true);
 }
 
 void GameTile::setSpritePos(int x,int y)
@@ -29,25 +42,44 @@ sf::Sprite GameTile::getSprite(float scale)
 	sprite.setScale(scale, scale);
 	return sprite;
 }
-
-void GameTile::setUpSprite()
+void GameTile::setUpSprite() {
+	setUpSprite(false);
+}
+void GameTile::setUpSprite(bool istexTextureAttached)
 {
 	
-	
-	std::string string;
-	switch (id)
+	if (!istexTextureAttached)
 	{
-	case(100):
-		string = "grass.png";
-		break;
-	default:
-		string = "error.png";
-		break;
+		std::string string;
+		switch (id)
+		{
+		case(100):
+			string = "grass.png";
+			break;
+		default:
+			string = "error.png";
+			break;
+		}
+		texture.loadFromFile(string);
 	}
-	texture.loadFromFile(string);
 	sprite.setTexture(texture);
 }
 
 GameTile::~GameTile()
+{
+}
+
+Center::Center(int x,int y)
+{
+
+	pos.x = x;
+	pos.y = y;
+	id = -1;
+	texture.loadFromFile("center.png");
+	sprite.setTexture(texture);
+
+}
+
+Center::~Center()
 {
 }
